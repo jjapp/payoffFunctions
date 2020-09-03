@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 plt.style.use('ggplot')
 
-def get_gain_function(dist, payoff_type, edge, cutoff=-3):
+def get_gain_function(dist, payoff_type, edge, cutoff=-30, f_max=0.06):
     payoff = []
     # concave vs convex:
     if payoff_type == 'concave':
@@ -33,7 +33,7 @@ def get_gain_function(dist, payoff_type, edge, cutoff=-3):
     payoff = filter(lambda z: z > cutoff, payoff)
     payoff = list(payoff)
 
-    f = np.linspace(0, 0.35, 100)
+    f = np.linspace(0, f_max, 100)
 
     # get gain function
     g_list = []
@@ -42,7 +42,7 @@ def get_gain_function(dist, payoff_type, edge, cutoff=-3):
         for j in payoff:
             obs = np.log(1 + i * j)
             int_vector.append(obs)
-        gain = simps(int_vector)
+        gain = simps(int_vector)/(len(dist))
         g_list.append(gain)
 
     return (f, g_list)
@@ -65,3 +65,5 @@ if __name__ == '__main__':
     x1 = get_gain_function(s, 'convex', 0.05)
     x2 = get_gain_function(s, 'concave', 0.05)
     plot_gain_function(x1, x2, "Convex", "Concave")
+
+
